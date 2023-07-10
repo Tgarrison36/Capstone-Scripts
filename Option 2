@@ -1,0 +1,15 @@
+import nmap
+
+# Create a new nmap scanner object
+scanner = nmap.PortScanner()
+
+# Prompt the user for the network to scan
+network = input("Enter the network to scan (in CIDR notation): ")
+
+# Run the nmap scan on the specified network
+print("Scanning network...")
+scanner.scan(hosts=network, arguments='-n -sP')
+
+# Print out the hosts that were found
+for host in scanner.all_hosts():
+    print(f"Host: {host} ({scanner[host].hostname()})\tStatus: {scanner[host].state()}")
